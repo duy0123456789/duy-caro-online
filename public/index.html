@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Caro Online – Multiplayer Gomoku 15×15</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════ LOBBY ═══════════════════════════════════════════ -->
+<div id="screen-lobby" class="screen active">
+  <div class="lobby-wrap">
+    <header class="lobby-header">
+      <h1 class="logo">♟ Caro Online</h1>
+      <p class="tagline">Multiplayer Gomoku 15×15</p>
+      <button class="btn-icon theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
+    </header>
+
+    <div class="lobby-cards">
+      <!-- Create -->
+      <div class="card">
+        <h2>🎮 Create Room</h2>
+        <input class="inp" id="nameNew" type="text" maxlength="20" placeholder="Your name" autocomplete="off" />
+        <button class="btn btn-primary" id="btnCreate">Create Game</button>
+      </div>
+
+      <!-- Join -->
+      <div class="card">
+        <h2>🚪 Join Room</h2>
+        <input class="inp" id="nameJoin" type="text" maxlength="20" placeholder="Your name" autocomplete="off" />
+        <input class="inp" id="roomInput" type="text" maxlength="30" placeholder="Room ID" autocomplete="off" />
+        <button class="btn btn-secondary" id="btnJoin">Join Game</button>
+      </div>
+
+      <!-- Quick Match -->
+      <div class="card">
+        <h2>⚡ Quick Match</h2>
+        <input class="inp" id="nameQuick" type="text" maxlength="20" placeholder="Your name" autocomplete="off" />
+        <button class="btn btn-accent" id="btnQuick">Find Opponent</button>
+        <button class="btn btn-ghost hidden" id="btnCancelMatch">Cancel</button>
+        <p class="match-status hidden" id="matchStatus">Searching…</p>
+      </div>
+
+      <!-- Spectate -->
+      <div class="card">
+        <h2>👁 Spectate</h2>
+        <input class="inp" id="roomSpectate" type="text" maxlength="30" placeholder="Room ID to watch" autocomplete="off" />
+        <button class="btn btn-ghost" id="btnSpectate">Watch</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ GAME ════════════════════════════════════════════ -->
+<div id="screen-game" class="screen">
+  <div class="game-layout">
+
+    <!-- Left sidebar -->
+    <aside class="sidebar sidebar-left">
+      <div class="player-card" id="cardP1">
+        <div class="avatar avatar-x">X</div>
+        <div class="player-info">
+          <span class="player-name" id="p1Name">Player 1</span>
+          <span class="player-mark">●</span>
+        </div>
+        <div class="turn-indicator" id="turnX">▶</div>
+      </div>
+
+      <div class="room-info">
+        <span class="room-label">Room</span>
+        <span class="room-id" id="roomDisplay">—</span>
+        <button class="btn-icon copy-btn" id="btnCopyRoom" title="Copy room ID">📋</button>
+      </div>
+
+      <div class="player-card" id="cardP2">
+        <div class="avatar avatar-o">O</div>
+        <div class="player-info">
+          <span class="player-name" id="p2Name">Waiting…</span>
+          <span class="player-mark">○</span>
+        </div>
+        <div class="turn-indicator" id="turnO"></div>
+      </div>
+
+      <div class="status-bar" id="statusBar">Waiting for opponent…</div>
+      <button class="btn btn-ghost btn-sm" id="btnLeave">🚪 Leave Room</button>
+    </aside>
+
+    <!-- Board -->
+    <main class="board-area">
+      <div id="boardWrap">
+        <canvas id="gameCanvas"></canvas>
+      </div>
+      <!-- Reconnect overlay -->
+      <div class="overlay hidden" id="reconnectOverlay">
+        <div class="overlay-box">
+          <div class="spinner"></div>
+          <p id="reconnectMsg">Opponent disconnected…</p>
+          <p class="countdown" id="reconnectCountdown"></p>
+        </div>
+      </div>
+      <!-- Waiting overlay (P1 waiting for P2) -->
+      <div class="overlay" id="waitingOverlay">
+        <div class="overlay-box">
+          <div class="spinner"></div>
+          <p>Waiting for opponent…</p>
+          <p class="room-share">Share Room ID: <strong id="waitingRoomId"></strong></p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Right sidebar – Chat -->
+    <aside class="sidebar sidebar-right">
+      <h3 class="chat-title">💬 Chat</h3>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input-row">
+        <input class="inp inp-chat" id="chatInput" type="text" maxlength="200" placeholder="Type a message…" autocomplete="off" />
+        <button class="btn btn-primary btn-sm" id="btnSendChat">Send</button>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- ═══════════════════════ RESULT MODAL ════════════════════════════════════ -->
+<div class="modal-backdrop hidden" id="resultBackdrop">
+  <div class="modal" id="resultModal">
+    <div class="result-emoji" id="resultEmoji">🎉</div>
+    <h2 id="resultTitle">You Win!</h2>
+    <p id="resultMessage"></p>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="btnRematch">🔄 Rematch</button>
+      <button class="btn btn-ghost" id="btnExitRoom">🚪 Exit Room</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast hidden"></div>
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>
