@@ -22,12 +22,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # KHÔNG build/test vì project game thường không cần
-      # tránh lỗi CI không cần thiết
-
-      - name: Prepare deployment package
+      - name: Prepare deploy folder
         run: |
-          mkdir -p deploy
+          mkdir deploy
           cp -r src deploy/
           cp -r public deploy/
           cp package.json deploy/
