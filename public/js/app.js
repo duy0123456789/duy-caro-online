@@ -176,7 +176,10 @@ canvas.addEventListener('touchend', (e) => {
 // SOCKET
 // ══════════════════════════════════════════════════════════════════════════════
 console.log('[DEBUG] Attempting to initialize socket.io...');
-const socket = io('http://localhost:3000', { transports: ['websocket', 'polling'] });
+// Auto-detect server URL: use same domain/port as current page
+const serverUrl = window.location.protocol + '//' + window.location.host;
+console.log('[DEBUG] Connecting to server:', serverUrl);
+const socket = io(serverUrl, { transports: ['websocket', 'polling'] });
 console.log('[DEBUG] Socket.io object created:', socket);
 
 socket.on('connect', () => {
